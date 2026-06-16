@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>LinkedIn → Salesforce</title>
+  <link rel="stylesheet" href="popup.css"/>
+</head>
+<body>
+
+  <div id="popup-root">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#00a1e0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15H9V8h2v9zm4 0h-2V8h2v9z"/></svg>
+        <span>LinkedIn → Salesforce</span>
+      </div>
+      <a href="options.html" target="_blank" id="settings-link" title="Settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </a>
+    </div>
+
+    <!-- Not authenticated -->
+    <div id="view-unauth">
+      <div class="hero">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00a1e0" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.06 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16z"/></svg>
+        <h2>Connect Salesforce</h2>
+        <p>Authorize the extension once to push LinkedIn profiles and companies directly into Salesforce.</p>
+      </div>
+      <div id="no-client-id-warning" style="display:none" class="warning-box">
+        ⚠️ No Client ID configured. <a href="options.html" target="_blank">Open Settings</a> to add your Salesforce Connected App Client ID.
+      </div>
+      <button class="btn btn-primary" id="btn-authorize">Authorize with Salesforce</button>
+    </div>
+
+    <!-- Authenticated -->
+    <div id="view-auth" style="display:none">
+      <div class="status-chip">
+        <span class="dot"></span>Connected to Salesforce
+      </div>
+      <p class="hint">Navigate to a LinkedIn <strong>profile</strong> or <strong>company page</strong> and click the blue button on the right edge of the screen to push data into Salesforce.</p>
+      <div class="action-list">
+        <div class="action-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#10b981"><path d="M20 6L9 17l-5-5"/></svg>
+          Leads &amp; Contacts from profiles
+        </div>
+        <div class="action-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#10b981"><path d="M20 6L9 17l-5-5"/></svg>
+          Accounts from company pages
+        </div>
+        <div class="action-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#10b981"><path d="M20 6L9 17l-5-5"/></svg>
+          Auto-deduplication via email / name
+        </div>
+      </div>
+      <button class="btn btn-ghost" id="btn-logout">Disconnect Salesforce</button>
+    </div>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

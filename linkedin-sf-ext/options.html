@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>LinkedIn → Salesforce — Settings</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f9fafb;
+      color: #111827;
+      padding: 40px 0;
+    }
+    .card {
+      max-width: 560px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .card-header {
+      background: #00a1e0;
+      color: #fff;
+      padding: 20px 28px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .card-body { padding: 28px; }
+    .field { margin-bottom: 20px; }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    input[type=text] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #111827;
+      background: #f9fafb;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    input[type=text]:focus {
+      border-color: #00a1e0;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0,161,224,0.12);
+    }
+    .hint {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .hint a { color: #00a1e0; }
+    .btn {
+      display: inline-block;
+      padding: 10px 24px;
+      background: #00a1e0;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: inherit;
+    }
+    .btn:hover { background: #0076a8; }
+    #status {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #065f46;
+      background: #d1fae5;
+      padding: 8px 12px;
+      border-radius: 6px;
+      display: none;
+    }
+    .divider { border: none; border-top: 1px solid #e5e7eb; margin: 24px 0; }
+    h3 { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+    .steps { list-style: decimal; padding-left: 20px; font-size: 13px; color: #374151; line-height: 2; }
+    .steps a { color: #00a1e0; }
+    code {
+      background: #f3f4f6;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">⚙ Settings — LinkedIn → Salesforce</div>
+    <div class="card-body">
+
+      <div class="field">
+        <label>Salesforce Connected App — Consumer Key (Client ID)</label>
+        <input type="text" id="client-id" placeholder="3MVG9…"/>
+        <p class="hint">
+          Create a Connected App in Salesforce Setup with OAuth enabled and
+          <code>api refresh_token</code> scopes. Set the Callback URL to
+          <code id="callback-url"></code>.
+          <a href="https://help.salesforce.com/s/articleView?id=sf.connected_app_create_basics.htm" target="_blank">Learn more ↗</a>
+        </p>
+      </div>
+
+      <button class="btn" id="btn-save">Save Settings</button>
+      <div id="status">✓ Settings saved</div>
+
+      <hr class="divider"/>
+
+      <h3>Setup Guide</h3>
+      <ol class="steps">
+        <li>In Salesforce Setup, search for <strong>App Manager</strong> and click <em>New Connected App</em>.</li>
+        <li>Enable <em>OAuth Settings</em>. Add <code id="callback-url-2"></code> as a Callback URL.</li>
+        <li>Add scopes: <em>Manage user data via APIs (api)</em> and <em>Perform requests at any time (refresh_token)</em>.</li>
+        <li>Save, wait ~10 minutes, then copy the <strong>Consumer Key</strong> into the field above.</li>
+        <li>Click <strong>Save Settings</strong>, then <strong>Authorize with Salesforce</strong> in the popup.</li>
+      </ol>
+
+      <hr class="divider"/>
+
+      <h3>Custom Field (Optional)</h3>
+      <p style="font-size:13px;color:#374151;line-height:1.6">
+        To store the LinkedIn URL in Salesforce, create a custom field called
+        <code>LinkedIn_URL__c</code> (Text, 500) on Lead, Contact, and Account objects.
+        Without it, everything still works — the LinkedIn URL field is simply ignored.
+      </p>
+
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
