@@ -25,8 +25,6 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "assets/img/*",
-        "sidebar.html",
         "sidebar.css"
       ],
       "matches": ["https://www.linkedin.com/*"]
@@ -51,7 +49,7 @@
         "https://www.linkedin.com/in/*",
         "https://www.linkedin.com/search/*"
       ],
-      "js": ["content.js"],
+      "js": ["scrape.js", "content.js"],
       "css": ["sidebar.css"],
       "run_at": "document_idle"
     }
