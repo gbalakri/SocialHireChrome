@@ -1,0 +1,16 @@
+{
+  "name": "socialhire-chrome",
+  "version": "2.0.0",
+  "private": true,
+  "description": "LinkedIn → Salesforce Chrome extension",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.0",
+    "vitest": "^2.0.5"
+  }
+}

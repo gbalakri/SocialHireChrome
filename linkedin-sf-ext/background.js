@@ -7,7 +7,7 @@ const OAUTH_CALLBACK = chrome.identity.getRedirectURL('salesforce');
 
 // ── OAuth ──────────────────────────────────────────────────────────────────
 
-async function getClientId() {
+export async function getClientId() {
   const { sf_client_id } = await chrome.storage.local.get('sf_client_id');
   return sf_client_id || null;
 }
@@ -17,24 +17,24 @@ async function getClientId() {
 // authorization-code flow with PKCE (RFC 7636). Salesforce's implicit/user-agent
 // flow (response_type=token) is disabled by default on newer Connected Apps.
 
-function base64UrlEncode(buffer) {
+export function base64UrlEncode(buffer) {
   let str = '';
   for (const b of new Uint8Array(buffer)) str += String.fromCharCode(b);
   return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-function generateCodeVerifier() {
+export function generateCodeVerifier() {
   const bytes = new Uint8Array(32);
   crypto.getRandomValues(bytes);
   return base64UrlEncode(bytes.buffer); // 43-char URL-safe string
 }
 
-async function generateCodeChallenge(verifier) {
+export async function generateCodeChallenge(verifier) {
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
   return base64UrlEncode(digest);
 }
 
-async function launchOAuth() {
+export async function launchOAuth() {
   const clientId = await getClientId();
   if (!clientId) {
     return { error: 'NO_CLIENT_ID', message: 'Please set your Salesforce Connected App Client ID in extension options.' };
@@ -77,7 +77,7 @@ async function launchOAuth() {
   return exchangeCodeForToken(clientId, code, codeVerifier);
 }
 
-async function exchangeCodeForToken(clientId, code, codeVerifier) {
+export async function exchangeCodeForToken(clientId, code, codeVerifier) {
   const body = new URLSearchParams({
     grant_type:    'authorization_code',
     code,
@@ -106,7 +106,7 @@ async function exchangeCodeForToken(clientId, code, codeVerifier) {
   return { success: true };
 }
 
-async function refreshAccessToken() {
+export async function refreshAccessToken() {
   const clientId = await getClientId();
   const { sf_refresh_token, sf_instance_url } = await chrome.storage.session.get(['sf_refresh_token', 'sf_instance_url']);
   if (!clientId || !sf_refresh_token) return { error: 'NO_REFRESH_TOKEN' };
@@ -134,18 +134,18 @@ async function refreshAccessToken() {
   return { success: true };
 }
 
-async function getSession() {
+export async function getSession() {
   return chrome.storage.session.get(['sf_access_token', 'sf_instance_url']);
 }
 
-async function logout() {
+export async function logout() {
   await chrome.storage.session.remove(['sf_access_token', 'sf_instance_url', 'sf_token_type', 'sf_refresh_token']);
   return { success: true };
 }
 
 // ── Salesforce REST API ────────────────────────────────────────────────────
 
-async function sfRequest(method, path, body, retried = false) {
+export async function sfRequest(method, path, body, retried = false) {
   const { sf_access_token, sf_instance_url } = await getSession();
   if (!sf_access_token) return { error: 'NOT_AUTHENTICATED' };
 
@@ -174,26 +174,26 @@ async function sfRequest(method, path, body, retried = false) {
   return { status: res.status, data };
 }
 
-async function soqlQuery(query) {
+export async function soqlQuery(query) {
   const path = `/services/data/v59.0/query?q=${encodeURIComponent(query)}`;
   return sfRequest('GET', path);
 }
 
-async function createRecord(objectType, fields) {
+export async function createRecord(objectType, fields) {
   const path = `/services/data/v59.0/sobjects/${objectType}/`;
   const result = await sfRequest('POST', path, fields);
   if (result.data?.id) return { success: true, id: result.data.id };
   return { error: result.data?.[0]?.message || 'Create failed', raw: result };
 }
 
-async function updateRecord(objectType, id, fields) {
+export async function updateRecord(objectType, id, fields) {
   const path = `/services/data/v59.0/sobjects/${objectType}/${id}`;
   const result = await sfRequest('PATCH', path, fields);
   if (result.status === 204) return { success: true, id };
   return { error: result.data?.[0]?.message || 'Update failed', raw: result };
 }
 
-async function upsertRecord(objectType, fields, uniqueQuery) {
+export async function upsertRecord(objectType, fields, uniqueQuery) {
   // Check for existing record first
   const existing = await soqlQuery(uniqueQuery);
   if (existing.error) return existing;
@@ -207,7 +207,7 @@ async function upsertRecord(objectType, fields, uniqueQuery) {
   return createRecord(objectType, fields);
 }
 
-async function getAccounts() {
+export async function getAccounts() {
   const result = await soqlQuery("SELECT Id, Name FROM Account ORDER BY Name LIMIT 200");
   if (result.error || !result.data?.records) return { error: 'Could not fetch accounts', records: [] };
   return { records: result.data.records };
